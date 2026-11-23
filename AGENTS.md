@@ -9,6 +9,20 @@ mailbox
     double-buffered command lists in video RAM, a mailbox byte, and an
     urgent lane. Read mailbox/README.md before using or changing it.
 
+util
+    Common start-up routines: unlock Kawari's extended registers
+    (KAWARI_INIT) and check for a minimum firmware version
+    (KAWARI_CHECK_VERSION). Read util/README.md. New general-purpose
+    routines that several projects would want belong here.
+
+## Using util from another project
+
+- BeebAsm: `INCLUDE "<path>/vicii-kawari-lib/util/beebasm/kawari-util.asm"`.
+- ca65: assemble with `-I <path>/vicii-kawari-lib/util/ca65`, then
+  `.include "kawari-util.inc"`.
+- A program should call `KAWARI_INIT`, then `KAWARI_CHECK_VERSION`, before it
+  uses any Kawari feature, and stop with a message if the check fails.
+
 ## Using the mailbox from another project
 
 - BeebAsm projects: `INCLUDE "<path>/vicii-kawari-lib/mailbox/beebasm/mbx-host.asm"`
@@ -25,8 +39,12 @@ mailbox
 ## Changing the library
 
 - The BeebAsm and ca65 sources must stay equivalent. Edit both, then run
-  `make check` in `mailbox/`; it compares the two builds and runs the
-  self-test in `../vicii-kawari-vice/src/x64sc`.
+  `make check` in the library's directory (`mailbox/` or `util/`); it
+  compares the two builds and runs the self-test in
+  `../vicii-kawari-vice/src/x64sc`.
+- When adding a routine to `util`, add it to both sources, document it in
+  `util/README.md` (inputs, outputs, registers corrupted, side effects on
+  the VRAM port) and exercise it in the demo.
 - Co-processor code: legal NMOS 6502 only, and no `BIT`.
-- `elite-source-code-commodore-64` has its own, older copy of the mechanism
-  and does not use this library. Do not change it to match.
+- `elite-source-code-commodore-64` has its own copies of this code and does
+  not use these libraries. Do not change it to match.

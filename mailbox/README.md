@@ -152,6 +152,10 @@ BeebAsm paths are relative to the directory beebasm runs in. For ca65 pass
  JSR MBX_START          ; start it and wait for the handshake
 ```
 
+On a C64 without a Kawari, or with firmware older than 1.20, `MBX_START`
+waits for ever. Check first with `KAWARI_CHECK_VERSION` from `../util` (see
+its README); `KAWARI_INIT` there does the same as `MBX_ACTIVATE`.
+
 `MBX_UPLOAD` copies whole pages, so up to 255 bytes after the image are
 overwritten in VRAM. Repeat `MBX_SEEK` / `MBX_UPLOAD` for further blocks or
 tables before `MBX_START`.
